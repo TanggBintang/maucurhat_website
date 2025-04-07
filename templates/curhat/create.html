@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block title %}Buat Curhatan - MauCurhat.id{% endblock %}
+
+{% block extra_css %}
+<style>
+    .create-header {
+        background: linear-gradient(135deg, rgba(67, 97, 238, 0.8), rgba(76, 201, 240, 0.8));
+        color: white;
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .form-card {
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        transition: var(--transition);
+    }
+    
+    .form-card:hover {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+    }
+    
+    .character-count {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        text-align: right;
+        margin-top: 0.5rem;
+    }
+    
+    .privacy-toggle {
+        position: relative;
+        padding: 1rem;
+        border-radius: var(--border-radius);
+        margin: 1rem 0;
+        transition: var(--transition);
+    }
+    
+    .privacy-toggle.public {
+        background-color: rgba(76, 201, 240, 0.1);
+        border: 1px solid rgba(76, 201, 240, 0.3);
+    }
+    
+    .privacy-toggle.private {
+        background-color: rgba(250, 204, 21, 0.1);
+        border: 1px solid rgba(250, 204, 21, 0.3);
+    }
+    
+    .privacy-description {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .submit-btn {
+        padding: 0.75rem 2rem;
+    }
+    
+    .tips-card {
+        background-color: rgba(67, 97, 238, 0.05);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+    
+    .tips-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+    
+    .tips-list {
+        padding-left: 1.5rem;
+    }
+    
+    .tips-list li {
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Create Header -->
+<div class="create-header" data-aos="fade-down">
+    <h1 class="mb-3"><i class="bi bi-pencil-square"></i> Buat Curhatan Baru</h1>
+    <p class="lead">Bagikan ceritamu kepada komunitas atau simpan untuk dirimu sendiri</p>
+</div>
+
+<div class="row" data-aos="fade-up">
+    <div class="col-lg-8">
+        <div class="form-card">
+            <div class="card-header">
+                <h4 class="mb-0">Tulis Curhatanmu</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="createForm">
+                    <div class="mb-4">
+                        <label for="judul" class="form-label">Judul</label>
+                        <input type="text" class="form-control" id="judul" name="judul" placeholder="Judul curhatanmu..." required>
+                        <div class="character-count">
+                            <span id="judulCount">0</span>/100 karakter
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="isi" class="form-label">Isi Curhatan</label>
+                        <textarea class="form-control" id="isi" name="isi" rows="8" placeholder="Ceritakan curhatanmu di sini..." required></textarea>
+                        <div class="character-count">
+                            <span id="isiCount">0</span> karakter
+                        </div>
+                    </div>
+                    
+                    <div id="privacyToggle" class="privacy-toggle public">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="is_public" name="is_public" checked>
+                            <label class="form-check-label fw-bold" for="is_public">
+                                <i class="bi bi-globe2"></i> Publik
+                            </label>
+                        </div>
+                        <div class="privacy-description">
+                            Curhatan dapat dilihat oleh semua orang. Semua orang dapat memberikan komentar dan dukungan.
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary submit-btn">
+                            <i class="bi bi-send"></i> Kirim Curhatan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="tips-card">
+            <div class="tips-title">
+                <i class="bi bi-lightbulb"></i>
+                <h5 class="mb-0">Tips Menulis Curhat</h5>
+            </div>
+            <ul class="tips-list">
+                <li>Tulis dengan jujur dan terbuka untuk mendapatkan dukungan lebih baik</li>
+                <li>Jelaskan situasi dengan spesifik tapi ringkas</li>
+                <li>Sampaikan perasaanmu dengan jelas</li>
+                <li>Jika membutuhkan privasi, gunakan mode privat</li>
+                <li>Hormati komunitas dengan tidak menyebarkan kebencian</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Character counter untuk judul
+        const judulInput = document.getElementById('judul');
+        const judulCount = document.getElementById('judulCount');
+        
+        judulInput.addEventListener('input', function() {
+            const length = this.value.length;
+            judulCount.textContent = length;
+            
+            if (length > 90) {
+                judulCount.style.color = '#f87171';
+            } else {
+                judulCount.style.color = '';
+            }
+        });
+        
+        // Character counter untuk isi
+        const isiTextarea = document.getElementById('isi');
+        const isiCount = document.getElementById('isiCount');
+        
+        isiTextarea.addEventListener('input', function() {
+            isiCount.textContent = this.value.length;
+        });
+        
+        // Privacy toggle
+        const privacyToggle = document.getElementById('privacyToggle');
+        const isPublicCheckbox = document.getElementById('is_public');
+        
+        isPublicCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                privacyToggle.classList.remove('private');
+                privacyToggle.classList.add('public');
+                privacyToggle.querySelector('.form-check-label').innerHTML = '<i class="bi bi-globe2"></i> Publik';
+                privacyToggle.querySelector('.privacy-description').textContent = 
+                    'Curhatan dapat dilihat oleh semua orang. Semua orang dapat memberikan komentar dan dukungan.';
+            } else {
+                privacyToggle.classList.remove('public');
+                privacyToggle.classList.add('private');
+                privacyToggle.querySelector('.form-check-label').innerHTML = '<i class="bi bi-lock"></i> Privat';
+                privacyToggle.querySelector('.privacy-description').textContent = 
+                    'Curhatan hanya dapat dilihat oleh kamu. Ini seperti jurnal pribadi online.';
+            }
+        });
+    });
+</script>
+{% endblock %}

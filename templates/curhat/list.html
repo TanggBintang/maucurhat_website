@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title|default('Beranda') }} - MauCurhat.id{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, rgba(67, 97, 238, 0.8), rgba(76, 201, 240, 0.8)), url('https://source.unsplash.com/random/1200x400/?calm');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        border-radius: var(--border-radius);
+    }
+    
+    .card-curhat {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .card-curhat .card-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .card-curhat .card-text {
+        flex: 1;
+    }
+    
+    .badge-float {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+    }
+    
+    .card-ribbon {
+        position: absolute;
+        top: 0;
+        right: 15px;
+        padding: 0.5rem 1rem;
+        background-color: var(--accent-color);
+        color: white;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%);
+        font-weight: 500;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        color: var(--accent-color);
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section" data-aos="fade-down">
+    <div class="container text-center py-4">
+        <h1 class="mb-3 fw-bold">{{ title|default('Selamat Datang di MauCurhat.id') }}</h1>
+        <p class="lead">Platform untuk berbagi cerita dan mendapatkan dukungan dari komunitas</p>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('curhat.create') }}" class="btn btn-light mt-3">
+            <i class="bi bi-plus-circle"></i> Buat Curhatan Baru
+        </a>
+        {% else %}
+        <div class="mt-4">
+            <a href="{{ url_for('auth.login') }}" class="btn btn-light me-2">Masuk</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light">Daftar</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Filter/Search Section (Optional) -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"><i class="bi bi-chat-square-text"></i> Curhatan Terbaru</h4>
+    <div class="d-flex">
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('curhat.create') }}" class="btn btn-primary">
+            <i class="bi bi-plus"></i> Buat Curhatan
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Main Content -->
+{% if curhatan %}
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for curhat in curhatan %}
+    <div class="col" data-aos="fade-up" data-aos-delay="{{ loop.index * 50 }}">
+        <div class="card card-curhat h-100 position-relative">
+            {% if not curhat.is_public %}
+            <div class="card-ribbon">Privat</div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ curhat.judul }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    <i class="bi bi-person-circle"></i> {{ curhat.author.username }}
+                    <small class="ms-2">
+                        <i class="bi bi-clock"></i> {{ curhat.created_at.strftime('%d %b %Y') }}
+                    </small>
+                </h6>
+                <p class="card-text mb-3">{{ curhat.isi|truncate(150) }}</p>
+                <div class="mt-auto d-flex justify-content-between align-items-center">
+                    <span class="badge bg-info">
+                        <i class="bi bi-chat-dots"></i> {{ curhat.komentar|length }} komentar
+                    </span>
+                    <a href="{{ url_for('curhat.detail', id=curhat.id) }}" class="btn btn-sm btn-outline-primary">
+                        Baca Selengkapnya <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state" data-aos="fade-up">
+    <i class="bi bi-chat-square-text"></i>
+    <h3>Belum ada curhatan</h3>
+    <p class="text-muted">Jadilah yang pertama berbagi ceritamu!</p>
+    {% if current_user.is_authenticated %}
+    <a href="{{ url_for('curhat.create') }}" class="btn btn-primary mt-3">Buat Curhatan Baru</a>
+    {% else %}
+    <a href="{{ url_for('auth.login') }}" class="btn btn-primary mt-3">Masuk untuk Berbagi</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Animasi pada judul jika diinginkan
+    document.addEventListener('DOMContentLoaded', function() {
+        // Kode JavaScript tambahan untuk halaman ini
+    });
+</script>
+{% endblock %}

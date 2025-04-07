@@ -1,0 +1,281 @@
+/* ===== VARIABEL WARNA DAN FONT ===== */
+:root {
+    --primary-color: #4361ee;
+    --secondary-color: #3f37c9;
+    --accent-color: #4cc9f0;
+    --bg-light: #f8f9fa;
+    --text-dark: #333;
+    --text-muted: #6c757d;
+    --success: #4ade80;
+    --warning: #facc15;
+    --danger: #f87171;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+  }
+  
+  /* ===== DASAR ===== */
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Poppins', sans-serif; /* Ganti font default - perlu ditambahkan di base.html */
+    background-color: var(--bg-light);
+    transition: var(--transition);
+  }
+  
+  /* ===== NAVIGASI ===== */
+  .navbar {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    padding: 15px 0;
+    transition: var(--transition);
+  }
+  
+  .navbar-brand {
+    font-weight: 700;
+    font-size: 1.6rem;
+    position: relative;
+    padding-left: 40px; /* Ruang untuk logo */
+  }
+  
+  /* Tempat untuk logo - bisa diganti dengan gambar sungguhan */
+  .navbar-brand:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+  }
+  
+  /* Animasi logo saat hover */
+  .navbar-brand:hover:before {
+    transform: translateY(-50%) scale(1.1);
+  }
+  
+  .nav-link {
+    font-weight: 500;
+    position: relative;
+    padding: 0.5rem 1rem;
+    margin: 0 5px;
+    transition: var(--transition);
+  }
+  
+  /* Efek underline pada item navigasi */
+  .nav-link:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: white;
+    transition: var(--transition);
+    transform: translateX(-50%);
+  }
+  
+  .nav-link:hover:after {
+    width: 70%;
+  }
+  
+  /* ===== KARTU DAN CONTAINER ===== */
+  .container {
+    padding: 2rem 1rem;
+  }
+  
+  .card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  
+  .card:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+  }
+  
+  .card-header {
+    background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+    color: white;
+    font-weight: 600;
+    padding: 1rem;
+    border-bottom: none;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .card-title {
+    color: var(--text-dark);
+    font-weight: 600;
+    transition: var(--transition);
+  }
+  
+  .card-title:hover {
+    color: var(--primary-color);
+  }
+  
+  /* ===== TOMBOL ===== */
+  .btn {
+    border-radius: var(--border-radius);
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Efek ripple pada tombol */
+  .btn:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius);
+    transform: scale(0);
+    transition: transform 0.5s;
+  }
+  
+  .btn:hover:after {
+    transform: scale(2);
+  }
+  
+  .btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    transform: translateY(-2px);
+  }
+  
+  .btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+  
+  .btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  /* ===== FORMULIR ===== */
+  .form-control {
+    border-radius: var(--border-radius);
+    padding: 0.75rem;
+    transition: var(--transition);
+    border: 1px solid #ced4da;
+  }
+  
+  .form-control:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.25rem rgba(76, 201, 240, 0.25);
+  }
+  
+  .form-label {
+    font-weight: 500;
+    color: var(--text-dark);
+  }
+  
+  /* ===== BADGE DAN ALERT ===== */
+  .badge {
+    padding: 0.5em 0.75em;
+    border-radius: 30px;
+    font-weight: 500;
+    transition: var(--transition);
+  }
+  
+  .badge:hover {
+    transform: scale(1.05);
+  }
+  
+  .alert {
+    border-radius: var(--border-radius);
+    border: none;
+    box-shadow: var(--box-shadow);
+    animation: fadeIn 0.5s;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* ===== KOMENTAR ===== */
+  .border-bottom {
+    position: relative;
+    transition: var(--transition);
+  }
+  
+  .border-bottom:hover {
+    background-color: rgba(67, 97, 238, 0.05);
+    padding-left: 10px;
+  }
+  
+  /* ===== FOOTER ===== */
+  footer {
+    margin-top: auto;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 1.5rem 0;
+    text-align: center;
+  }
+  
+  /* ===== ANIMASI LOADING ===== */
+  .loading {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  /* ===== RESPONSIF ===== */
+  @media (max-width: 768px) {
+    .navbar-brand {
+      font-size: 1.4rem;
+    }
+    
+    .card {
+      margin-bottom: 1rem;
+    }
+  }
+  
+  /* ===== TEMA GELAP (bisa diimplementasikan dengan JavaScript) ===== */
+  .dark-mode {
+    --bg-light: #2d3748;
+    --text-dark: #e2e8f0;
+    --text-muted: #a0aec0;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  .dark-mode .card {
+    background-color: #1a202c;
+  }
+  
+  .dark-mode .form-control {
+    background-color: #2d3748;
+    border-color: #4a5568;
+    color: #e2e8f0;
+  }

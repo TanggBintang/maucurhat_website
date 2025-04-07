@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ curhat.judul }} - MauCurhat.id{% endblock %}
+
+{% block extra_css %}
+<style>
+    .curhat-header {
+        background: linear-gradient(135deg, rgba(67, 97, 238, 0.8), rgba(76, 201, 240, 0.8));
+        color: white;
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .curhat-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('https://source.unsplash.com/random/1200x400/?texture') center center;
+        opacity: 0.1;
+        z-index: 0;
+    }
+    
+    .curhat-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .curhat-body {
+        background-color: white;
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        margin-bottom: 2rem;
+        line-height: 1.8;
+    }
+    
+    .curhat-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .author-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--accent-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+    
+    .comment-box {
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .comment-item {
+        padding: 1rem;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        margin-bottom: 1rem;
+    }
+    
+    .comment-item:hover {
+        background-color: rgba(67, 97, 238, 0.05);
+    }
+    
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .comment-author {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .comment-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: var(--secondary-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+    
+    .no-comments {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-muted);
+    }
+    
+    .private-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 2;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Curhat Header -->
+<div class="curhat-header" data-aos="fade-down">
+    <div class="curhat-content">
+        {% if not curhat.is_public %}
+        <span class="badge bg-warning private-badge">
+            <i class="bi bi-lock-fill"></i> Privat
+        </span>
+        {% endif %}
+        <h1 class="mb-3">{{ curhat.judul }}</h1>
+        <div class="curhat-meta">
+            <div class="author-avatar">
+                {{ curhat.author.username[0]|upper }}
+            </div>
+            <div>
+                <div class="fw-bold">{{ curhat.author.username }}</div>
+                <div class="text-light">
+                    <i class="bi bi-clock"></i> {{ curhat.created_at.strftime('%d %b %Y, %H:%M') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Curhat Content -->
+<div class="curhat-body" data-aos="fade-up">
+    <div class="curhat-text">
+        {{ curhat.isi|nl2br }}
+    </div>
+</div>
+
+<!-- Comments Section -->
+<div class="card" data-aos="fade-up" data-aos-delay="100">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-chat-dots"></i> Komentar ({{ curhat.komentar|length }})</h5>
+    </div>
+    <div class="card-body">
+        {% if current_user.is_authenticated %}
+        <div class="comment-box" data-aos="fade-up" data-aos-delay="150">
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="komentar" class="form-label">Tulis Komentarmu</label>
+                    <textarea class="form-control" id="komentar" name="komentar" rows="3" placeholder="Bagikan pendapatmu..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-send"></i> Kirim Komentar
+                </button>
+            </form>
+        </div>
+        {% else %}
+        <div class="alert alert-info mb-4" data-aos="fade-up" data-aos-delay="150">
+            <i class="bi bi-info-circle"></i> <a href="{{ url_for('auth.login') }}">Masuk</a> untuk menambahkan komentar.
+        </div>
+        {% endif %}
+        
+        {% if curhat.komentar %}
+            <div class="comments-list" data-aos="fade-up" data-aos-delay="200">
+                {% for komentar in curhat.komentar %}
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <div class="comment-author">
+                            <div class="comment-avatar">
+                                {{ komentar.author.username[0]|upper }}
+                            </div>
+                            <div class="fw-bold">{{ komentar.author.username }}</div>
+                        </div>
+                        <div class="text-muted small">
+                            <i class="bi bi-clock"></i> {{ komentar.created_at.strftime('%d %b %Y, %H:%M') }}
+                        </div>
+                    </div>
+                    <div class="comment-content mt-2">
+                        {{ komentar.isi }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-comments" data-aos="fade-up" data-aos-delay="200">
+                <i class="bi bi-chat"></i>
+                <p>Belum ada komentar. Jadilah yang pertama!</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-resize textarea saat diketik
+        const commentArea = document.getElementById('komentar');
+        if (commentArea) {
+            commentArea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        }
+    });
+</script>
+{% endblock %}
